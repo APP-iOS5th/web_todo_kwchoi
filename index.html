@@ -31,8 +31,7 @@
             loadTodos();
         });
 
-        // id가 addTodo인 Element에 click할 때 동작하는 Event Listener추가
-        document.getElementById("addTodo").addEventListener('click', () => {
+        const addTodoEvent = () => {
             // id가 todoInput인 Element 가져오기
             let text = document.getElementById("todoInput");
             // 이 Element에 입력된 값이 있으면 if 내부 실행
@@ -44,6 +43,14 @@
             }
             // 바로 입력할 수 있게 커서 input = todoInput 으로 이동
             text.focus();
+        }
+
+        // id가 addTodo인 Element에 click할 때 동작하는 Event Listener추가
+        document.getElementById("addTodo").onclick = addTodoEvent
+        document.getElementById("todoInput").addEventListener("keydown", (e) => {
+            if(e.key == "Enter") {
+                addTodoEvent();
+            }
         });
 
         const loadTodos = () => {
@@ -71,6 +78,7 @@
 
             // 할 일을 완료한 항목을 체크하기 위한 체크박스 생성
             let checkbox = document.createElement("input");
+            // 생성한 checkbox에 'form-check-input' class 추가(bootstrap참조) => <input class="form-check-input" type="checkbox">
             checkbox.classList.add("form-check-input");
             // 나중에 재사용? 하기 위해 id 부여
             checkbox.id = `checkbox${liCount.toString()}`
@@ -86,7 +94,7 @@
 
             // todoInput에서 입력한 text를 담기 위한 label
             let label = document.createElement("label");
-            label.classList.add("form-체크-label");
+            label.classList.add("form-check-label");
             // 나중에 재사용? 하기 위해 id 부여
             label.id = `label${liCount.toString()}`
             // label에 text 추가
@@ -104,7 +112,7 @@
             li.appendChild(checkbox)
             li.appendChild(label)
 
-            // 부모 Element(<ul class="list-group" id="todoList">)하위에 <li></li>추가
+            // 부모 Element(<ul class="list-group" id="todoList">)하위에 생성한<li></li>추가
             parentList.appendChild(li);
         }
 
