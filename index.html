@@ -65,11 +65,14 @@
             }
         }
 
+        // 원래 list-group-item의 개수로 하려고 했지만 삭제 후 추가하면 local storage에 저장이 잘못되는 오류가 있어서
+        // 전역변수로 설정...
+        var globalOrder = 0;
         const addTodo = (text, activate) => {
             // 생성된 <li></li>를 넣을 부모 Element 가져오기
             var parentList = document.getElementById("todoList");
             // li, label, checkbox에 id를 주기 위해 갯수 가져오기
-            var liCount = document.getElementsByClassName("list-group-item").length;
+            var liCount = globalOrder;
 
             // <li></li> 생성
             var li = document.createElement("li");
@@ -128,6 +131,7 @@
             li.appendChild(deleteButton);
             // 부모 Element(<ul class="list-group" id="todoList">)하위에 생성한<li></li>추가
             parentList.appendChild(li);
+            globalOrder += 1;
         }
 
         // checkbox를 선택했을 때 Event추가
