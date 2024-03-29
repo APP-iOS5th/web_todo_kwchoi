@@ -33,7 +33,7 @@
 
         const loadTodos = () => {
             // localStorage에 todos로 저장된 item을 불러옴
-            var todos = JSON.parse(localStorage.getItem("todos"));
+            var todos = JSON.parse(localStorage.getItem("todoLists"));
             if(todos) {
                 // 저장된 todo List가 있다면 실행
                 todos.forEach((todo, idx) => {
@@ -141,7 +141,7 @@
             var parentLi = document.getElementById(parentId);
             
             // 선택한 li의 배경색을 설정하기 위해 local storage에 저장된 todos 불러오기
-            var todos = JSON.parse(localStorage.getItem("todos"));
+            var todos = JSON.parse(localStorage.getItem("todoLists"));
             if(todos) {
                 // activate의 값에 따라 li의 배경색, label의 취소선 여부 체크
                 var color = todos[parentId].activate ? "gray" : "none";
@@ -152,7 +152,7 @@
                 // 이전의 체크값의 반대값으로 수정
                 todos[parentId].activate = !todos[parentId].activate;
                 // 수정된 값 다시 local storage에 저장
-                localStorage.setItem("todos", JSON.stringify(todos));
+                localStorage.setItem("todoLists", JSON.stringify(todos));
             }
         }
 
@@ -186,7 +186,7 @@
                 });
             }
             // localStorage: 로컬 저장소가 가지고 있는 storage 15MB의 크기 제한(token 정보 정도는 저장 가능)
-            localStorage.setItem("todos", JSON.stringify(todos));
+            localStorage.setItem("todoLists", JSON.stringify(todos));
         }
     </script>
 </html>
