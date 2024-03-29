@@ -33,7 +33,7 @@
 
         const addTodoEvent = () => {
             // id가 todoInput인 Element 가져오기
-            let text = document.getElementById("todoInput");
+            var text = document.getElementById("todoInput");
             // 이 Element에 입력된 값이 있으면 if 내부 실행
             if(text.value) {
                 addTodo(text.value, true);
@@ -41,12 +41,13 @@
                 // 값 저장 후 초기화
                 text.value = "";
             }
-            // 바로 입력할 수 있게 커서 input = todoInput 으로 이동
+            // 바로 입력할 수 있게 커서 <input id="todoInput"/> 으로 이동
             text.focus();
         }
 
         // id가 addTodo인 Element에 click할 때 동작하는 Event Listener추가
         document.getElementById("addTodo").onclick = addTodoEvent
+        // id가 todoInput인 input에서 Enter를 눌렀을 때 실행
         document.getElementById("todoInput").addEventListener("keydown", (e) => {
             if(e.key == "Enter") {
                 addTodoEvent();
@@ -55,7 +56,7 @@
 
         const loadTodos = () => {
             // localStorage에 todos로 저장된 item을 불러옴
-            let todos = JSON.parse(localStorage.getItem("todos"));
+            var todos = JSON.parse(localStorage.getItem("todos"));
             if(todos) {
                 // 저장된 todo List가 있다면 실행
                 todos.forEach((todo, idx) => {
@@ -66,18 +67,18 @@
 
         const addTodo = (text, activate) => {
             // 생성된 <li></li>를 넣을 부모 Element 가져오기
-            let parentList = document.getElementById("todoList");
+            var parentList = document.getElementById("todoList");
             // li, label, checkbox에 id를 주기 위해 갯수 가져오기
-            let liCount = document.getElementsByClassName("list-group-item").length;
+            var liCount = document.getElementsByClassName("list-group-item").length;
 
             // <li></li> 생성
-            let li = document.createElement("li");
+            var li = document.createElement("li");
             // 생성한 li에 'list-group-item' class 추가(bootstrap참조) => <li class="list-group-item"></li>
             li.classList.add("list-group-item");
             li.id = liCount.toString();
 
             // 할 일을 완료한 항목을 체크하기 위한 체크박스 생성
-            let checkbox = document.createElement("input");
+            var checkbox = document.createElement("input");
             // 생성한 checkbox에 'form-check-input' class 추가(bootstrap참조) => <input class="form-check-input" type="checkbox">
             checkbox.classList.add("form-check-input");
             // 나중에 재사용? 하기 위해 id 부여
@@ -93,12 +94,25 @@
             checkbox.onclick = addEventToCheckbox
 
             // todoInput에서 입력한 text를 담기 위한 label
-            let label = document.createElement("label");
+            var label = document.createElement("label");
             label.classList.add("form-check-label");
             // 나중에 재사용? 하기 위해 id 부여
             label.id = `label${liCount.toString()}`
             // label에 text 추가
             label.innerText = text;
+
+            // 이미 생성한 todo를 지우는 버튼
+            var deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.innerText = "삭제"
+            // bootstrap class추가
+            deleteButton.classList.add("btn");
+            deleteButton.classList.add("btn-danger");
+            deleteButton.id = `btn${liCount}`;
+            // 버튼 오른쪽으로 배치
+            deleteButton.setAttribute("style", "float: right");
+            // 버튼 클릭에 대해 <li></li>삭제 Event설정
+            deleteButton.onclick = deleteLi
 
             // activate: 체크박스가 체크 되어있는지 아닌지 확인
             if(!activate) {
@@ -108,10 +122,10 @@
                 checkbox.checked = true;
             }
 
-            // li tag에 checkbox, label 추가
-            li.appendChild(checkbox)
-            li.appendChild(label)
-
+            // li tag에 checkbox, label, button 추가
+            li.appendChild(checkbox);
+            li.appendChild(label);
+            li.appendChild(deleteButton);
             // 부모 Element(<ul class="list-group" id="todoList">)하위에 생성한<li></li>추가
             parentList.appendChild(li);
         }
@@ -119,15 +133,15 @@
         // checkbox를 선택했을 때 Event추가
         const addEventToCheckbox = (ele) => {
             // 선택한 checkbox의 부모 Element가져오기
-            let parentId = ele.target.parentNode.id;
-            let parentLi = document.getElementById(parentId);
+            var parentId = ele.target.parentNode.id;
+            var parentLi = document.getElementById(parentId);
             
             // 선택한 li의 배경색을 설정하기 위해 local storage에 저장된 todos 불러오기
-            let todos = JSON.parse(localStorage.getItem("todos"));
+            var todos = JSON.parse(localStorage.getItem("todos"));
             if(todos) {
                 // activate의 값에 따라 li의 배경색, label의 취소선 여부 체크
-                let color = todos[parentId].activate ? "gray" : "none";
-                let line = todos[parentId].activate ? "line-through" : "";
+                var color = todos[parentId].activate ? "gray" : "none";
+                var line = todos[parentId].activate ? "line-through" : "";
                 parentLi.setAttribute("style", `background-color: ${color};`);
                 document.getElementById(`label${parentId}`).setAttribute("style", `text-decoration: ${line};`);
                 // 이전의 체크값의 반대값으로 수정
@@ -137,13 +151,28 @@
             }
         }
 
+        // <li></li> 삭제 기능
+        const deleteLi = (ele) => {
+            // 버튼 생성할 때 지정한 id값으로 몇번 째 버튼인지 확인
+            const order = ele.target.id.split("btn")[1];
+            // 버튼의 부모 element 가져오기
+            const parentLi = document.getElementById(order);
+            // 부모 element 삭제
+            parentLi.remove();
+
+            // 삭제 후 local stroage 수정
+            storeTodos();
+        }
+
+        // local storage에 저장 기능
         const storeTodos = () => {
-            let todos = [];
-            let todoList = document.getElementById("todoList");
-            for (let i = 0; i < todoList.children.length; i++) {
+            var todos = [];
+            var todoList = document.getElementById("todoList");
+            for (var i = 0; i < todoList.children.length; i++) {
                 // addTodo에 지정했던 id값으로 element 불러오기
-                let label = document.getElementById(`label${i}`);
-                let checkbox = document.getElementById(`checkbox${i}`);
+                var idx = todoList.children[i].id;
+                var label = document.getElementById(`label${idx}`);
+                var checkbox = document.getElementById(`checkbox${idx}`);
 
                 todos.push({
                     // label의 innerText, 체크박스의 check값을 activate로 저장
