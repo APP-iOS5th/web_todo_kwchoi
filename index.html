@@ -60,23 +60,23 @@
         const addTodo = (text, activate) => {
             // 생성된 <li></li>를 넣을 부모 Element 가져오기
             let parentList = document.getElementById("todoList");
-            // li에 id를 주기 위해 갯수 가져오기
+            // li, label, checkbox에 id를 주기 위해 갯수 가져오기
             let liCount = document.getElementsByClassName("list-group-item").length;
 
             // <li></li> 생성
             let li = document.createElement("li");
-            // 생성한 li에 'list-group-item' class 추가 => <li class="list-group-item"></li>
+            // 생성한 li에 'list-group-item' class 추가(bootstrap참조) => <li class="list-group-item"></li>
             li.classList.add("list-group-item");
             li.id = liCount.toString();
 
             // 할 일을 완료한 항목을 체크하기 위한 체크박스 생성
             let checkbox = document.createElement("input");
-            checkbox.classList.add("form-체크-input");
+            checkbox.classList.add("form-check-input");
             // 나중에 재사용? 하기 위해 id 부여
             checkbox.id = `checkbox${liCount.toString()}`
             // input으로 생성했기 때문에 type 지정
             checkbox.type = "checkbox";
-            // checkbox에 체크 안함
+            // checkbox 초기설정 -> 체크 안함
             checkbox.checked = false;
 
             // label과 간격을 두기 위해 margin값 설정
