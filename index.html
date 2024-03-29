@@ -31,6 +31,17 @@
             loadTodos();
         });
 
+        const loadTodos = () => {
+            // localStorage에 todos로 저장된 item을 불러옴
+            var todos = JSON.parse(localStorage.getItem("todos"));
+            if(todos) {
+                // 저장된 todo List가 있다면 실행
+                todos.forEach((todo, idx) => {
+                    addTodo(todo[idx], todo.activate);
+                });
+            }
+        }
+
         const addTodoEvent = () => {
             // id가 todoInput인 Element 가져오기
             var text = document.getElementById("todoInput");
@@ -53,17 +64,6 @@
                 addTodoEvent();
             }
         });
-
-        const loadTodos = () => {
-            // localStorage에 todos로 저장된 item을 불러옴
-            var todos = JSON.parse(localStorage.getItem("todos"));
-            if(todos) {
-                // 저장된 todo List가 있다면 실행
-                todos.forEach((todo, idx) => {
-                    addTodo(todo[idx], todo.activate);
-                });
-            }
-        }
 
         // 원래 list-group-item의 개수로 하려고 했지만 삭제 후 추가하면 local storage에 저장이 잘못되는 오류가 있어서
         // 전역변수로 설정...
@@ -146,8 +146,9 @@
                 // activate의 값에 따라 li의 배경색, label의 취소선 여부 체크
                 var color = todos[parentId].activate ? "gray" : "none";
                 var line = todos[parentId].activate ? "line-through" : "";
-                parentLi.setAttribute("style", `background-color: ${color};`);
-                document.getElementById(`label${parentId}`).setAttribute("style", `text-decoration: ${line};`);
+                // 그냥 깜빡하고 바뀌면 밋밋해서... 서서히 색칠하게 수정
+                parentLi.setAttribute("style", `background-color: ${color}; transition: background-color 0.5s ease;`);
+                document.getElementById(`label${parentId}`).setAttribute("style", `text-decoration: ${line}; transition: text-decoration 0.5s ease;`);
                 // 이전의 체크값의 반대값으로 수정
                 todos[parentId].activate = !todos[parentId].activate;
                 // 수정된 값 다시 local storage에 저장
